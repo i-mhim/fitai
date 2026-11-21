@@ -10,6 +10,10 @@ from jwt.exceptions import InvalidTokenError
 from sqlalchemy.orm import Session
 from app.core.db import get_db
 from app.core.models import User
+from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv(Path(__file__).resolve().parents[2] / ".env")
 
 hasher = PasswordHasher()
 bearer = HTTPBearer(auto_error=False)
