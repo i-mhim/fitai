@@ -1,6 +1,6 @@
 """Argon2 password hashes and short-lived signed access tokens."""
-import os
 from datetime import datetime, timedelta, timezone
+
 from argon2 import PasswordHasher
 from argon2.exceptions import VerificationError, InvalidHashError
 import jwt
@@ -8,6 +8,8 @@ from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jwt.exceptions import InvalidTokenError
 from sqlalchemy.orm import Session
+
+from app.core.config import get_jwt_secret
 from app.core.db import get_db
 from app.core.models import User
 
@@ -16,10 +18,7 @@ bearer = HTTPBearer(auto_error=False)
 
 
 def jwt_secret() -> str:
-    value = os.getenv("FITAI_JWT_SECRET")
-    if not value or len(value) < 32:
-        raise RuntimeError("Set FITAI_JWT_SECRET to a cryptographically random secret of at least 32 characters")
-    return value
+    return get_jwt_secret()
 
 
 def hash_password(password: str) -> str:
